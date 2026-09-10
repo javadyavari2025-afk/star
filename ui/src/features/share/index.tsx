@@ -55,12 +55,12 @@ export default function PeerShare() {
 
   return (
     <div className='sky-share-theme sky-share-bg text-foreground min-h-svh w-full'>
-      <div className='max-w-8xl mx-auto space-y-10 px-6 py-14'>
-        <div className='space-y-3 text-center'>
+      <div className='mx-auto max-w-6xl space-y-8 px-6 py-10'>
+        <div className='space-y-2 text-center'>
           <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-xs font-bold tracking-[0.2em] text-transparent uppercase'>
             SKY-PANEL
           </span>
-          <h1 className='text-4xl font-bold tracking-tight'>
+          <h1 className='text-3xl font-bold tracking-tight'>
             Welcome{stats?.name ? `, ${stats.name}` : ''}
           </h1>
           <p className='text-muted-foreground text-sm'>
@@ -69,27 +69,19 @@ export default function PeerShare() {
           </p>
         </div>
 
-        {telegramStatus?.enabled ? (
-          <div className='grid gap-6 lg:grid-cols-2'>
-            <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
-            {configCard}
+        <div className='grid grid-cols-1 gap-5 md:grid-cols-3'>
+          {statsCard}
+          <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
+          {configCard}
+          {telegramStatus?.enabled && (
             <PeerTelegramCard
               isLoading={telegramStatusLoading || telegramLinkLoading}
               shareId={shareId}
               botStatus={telegramStatus}
               linkStatus={telegramLink}
             />
-            {statsCard}
-          </div>
-        ) : (
-          <div className='grid items-start gap-6 lg:grid-cols-2'>
-            <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
-            <div className='space-y-6'>
-              {configCard}
-              {statsCard}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   )
