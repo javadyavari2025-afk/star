@@ -43,7 +43,9 @@ export default function PeerTelegramCard({
   return (
     <Card className='sky-glass-card flex h-full flex-col gap-3 border-white/10'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0'>
-        <CardTitle className='text-base font-semibold'>Telegram</CardTitle>
+        <CardTitle className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-base font-semibold text-transparent'>
+          Telegram
+        </CardTitle>
         {!isLoading && (
           <ColoredBadge
             color={linked ? 'green' : 'yellow'}
@@ -64,25 +66,37 @@ export default function PeerTelegramCard({
             <div className='flex items-center justify-between'>
               <span className='flex items-center gap-2'>
                 <IconBrandTelegram className='h-4 w-4' />
-                Bot
+                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-transparent'>
+                  Bot
+                </span>
               </span>
-              <span>{botName}</span>
+              <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-transparent'>
+                {botName}
+              </span>
             </div>
 
             <div className='flex items-center justify-between'>
               <span className='flex items-center gap-2'>
                 <UserIcon className='h-4 w-4' />
-                Account
+                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-transparent'>
+                  Account
+                </span>
               </span>
-              <span>{account}</span>
+              <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-transparent'>
+                {account}
+              </span>
             </div>
 
             <div className='flex items-center justify-between'>
               <span className='flex items-center gap-2'>
                 <BellIcon className='h-4 w-4' />
-                Alerts
+                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-transparent'>
+                  Alerts
+                </span>
               </span>
-              <span>{alertsLabel}</span>
+              <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-transparent'>
+                {alertsLabel}
+              </span>
             </div>
           </div>
         )}
