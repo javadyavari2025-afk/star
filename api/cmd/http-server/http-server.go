@@ -1,0 +1,69 @@
+package httpserver
+
+import (
+	"fmt"
+
+	"golang.org/x/crypto/acme/autocert"
+
+	"github.com/sky-panel/sky-panel/api/adaptor/mikrotik"
+	traffic "github.com/sky-panel/sky-panel/api/cmd/jobs"
+	"github.com/sky-panel/sky-panel/api/common"
+	"github.com/sky-panel/sky-panel/api/config"
+	"github.com/sky-panel/sky-panel/api/http"
+	"github.com/sky-panel/sky-panel/api/service"
+	"github.com/sky-panel/sky-panel/api/utils/validate"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"gorm.io/gorm"
+)
+
+func StartHttpServer(db *gorm.DB, mwpClients *common.MwpClients, mikrotikAdaptor *mikrotik.Adaptor, trafficCalculator *traffic.Calculator, telegramBot *service.TelegramBot) error {
+	appCfg := config.GetAppConfig()
+
+	authenticationService := service.NewAuthentication(db)
+	schedulerService := service.NewScheduler(mikrotikAdaptor)
+	queueService := service.NewQueue(mikrotikAdaptor)
+	configGenerator := service.NewConfigGenerator(db)
+	qrCodeGenerator := service.NewQRCodeGenerator(db)
+	excelGenerator := service.NewExcelGenerator(db)
+	serverService := service.NewServerService(db, mwpClients, mikrotikAdaptor)
+	interfaceService := service.NewWgInterface(db, mikrotikAdaptor)
+	ipPoolService := service.NewIPPool(db)
+	peerService := service.NewWGPeer(db, mikrotikAdaptor, schedulerService, queueService, configGenerator, qrCodeGenerator)
+	deviceDataService := service.NewDeviceData(db, mikrotikAdaptor, serverService, interfaceService, peerService)
+	syncService := service.NewSyncService(db, mikrotikAdaptor, configGenerator, qrCodeGenerator)
+
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.CORS())
+	e.Validator = &validate.CustomValidator{Validator: validator.New()}
+
+	http.SetupMwpUI(e, appCfg.UIAssetsFs)
+	http.SetupMwpAPI(
+		e,
+		mwpClients,
+		authenticationService,
+		serverService,
+		interfaceService,
+		ipPoolService,
+		peerService,
+		configGenerator,
+		qrCodeGenerator,
+		excelGenerator,
+		deviceDataService,
+		trafficCalculator,
+		syncService,
+		telegramBot,
+	)
+
+	if appCfg.Port == "443" || appCfg.Port == "8443" {
+		e.AutoTLSManager.Cache = autocert.DirCache(appCfg.DataDirPath)
+		e.Logger.Fatal(e.StartAutoTLS(fmt.Sprintf("%s:%s", appCfg.Host, appCfg.Port)))
+	} else {
+		e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", appCfg.Host, appCfg.Port)))
+	}
+
+	return nil
+}

@@ -1,0 +1,132 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  ENTRYPOINT: api/cmd/main.go
+
+jobs:
+  build-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Build UI
+        working-directory: ui
+        run: |
+          npm ci
+          npm run build
+          echo "${{ github.sha }}" > dist/.app_commit_sha
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ui-dist
+          path: ui/dist
+
+  build-go:
+    needs: build-ui
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: ui-dist
+          path: ui/dist
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Install cross compilers
+        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Download modules
+        run: |
+          go mod download
+          go mod verify
+
+      - name: Build binaries
+        run: |
+          mkdir -p build
+          BUILD_COMMAND_GENERIC="CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -buildmode=pie -tags=osusergo,netgo,static_build -buildvcs=false"
+          BUILD_COMMAND_LINUX="GOOS=linux CGO_ENABLED=1 go build -trimpath -ldflags='-linkmode=external -s -w -extldflags=--static-pie' -buildmode=pie -tags=osusergo,netgo,static_build -buildvcs=false"
+          BUILD_COMMAND_LINUX_ARM="GOOS=linux CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -tags=osusergo,netgo,static_build -buildvcs=false"
+
+          eval "CC=gcc GOARCH=amd64 ${BUILD_COMMAND_LINUX} -o 'build/mwp.linux.amd64' '${ENTRYPOINT}'"
+          eval "CC=aarch64-linux-gnu-gcc GOARCH=arm64 ${BUILD_COMMAND_LINUX} -o 'build/mwp.linux.arm64' '${ENTRYPOINT}'"
+          eval "GOARCH=arm GOARM=7 ${BUILD_COMMAND_LINUX_ARM} -o 'build/mwp.linux.arm' '${ENTRYPOINT}'"
+          eval "GOARCH=amd64 GOOS=windows ${BUILD_COMMAND_GENERIC} -o 'build/mwp.windows.amd64.exe' '${ENTRYPOINT}'"
+          eval "GOARCH=arm64 GOOS=windows ${BUILD_COMMAND_GENERIC} -o 'build/mwp.windows.arm64.exe' '${ENTRYPOINT}'"
+          eval "GOARCH=amd64 GOOS=darwin ${BUILD_COMMAND_GENERIC} -o 'build/mwp.darwin.amd64' '${ENTRYPOINT}'"
+          eval "GOARCH=arm64 GOOS=darwin ${BUILD_COMMAND_GENERIC} -o 'build/mwp.darwin.arm64' '${ENTRYPOINT}'"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go-binaries
+          path: build
+
+  docker:
+    needs: build-go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: go-binaries
+          path: build
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase image name
+        id: image
+        run: echo "name=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          provenance: false
+          build-args: |
+            APP_COMMIT_SHA=${{ github.sha }}
+          tags: |
+            ghcr.io/${{ steps.image.outputs.name }}:${{ github.ref_name }}
+            ghcr.io/${{ steps.image.outputs.name }}:latest
+
+  release:
+    needs: build-go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: go-binaries
+          path: build
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: build/*
+          generate_release_notes: true
