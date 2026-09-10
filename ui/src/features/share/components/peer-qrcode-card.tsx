@@ -19,13 +19,15 @@ export default function PeerQRCodeCard({ isLoading, qrCode }: QRCodeCardProps) {
   return (
     <Card className='sky-glass-card flex h-full flex-col gap-5 border-white/10'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0'>
-        <CardTitle className='text-base font-semibold'>QR Code</CardTitle>
+        <CardTitle className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-base font-semibold text-transparent'>
+          QR Code
+        </CardTitle>
         <span className='text-primary text-xs font-semibold'>WireGuard</span>
       </CardHeader>
 
       <CardContent className='flex flex-1 flex-col items-center justify-center gap-4'>
         {isLoading ? (
-          <Skeleton className='h-[180px] w-[180px] rounded-2xl' />
+          <Skeleton className='h-[280px] w-[280px] rounded-2xl' />
         ) : (
           <div
             onClick={handleToggleBlur}
@@ -35,9 +37,9 @@ export default function PeerQRCodeCard({ isLoading, qrCode }: QRCodeCardProps) {
             <img
               src={qrCode}
               alt='QR Code'
-              width={168}
-              height={168}
-              className={`h-[168px] w-[168px] rounded-xl transition-all duration-300 ${
+              width={260}
+              height={260}
+              className={`h-[260px] w-[260px] rounded-xl transition-all duration-300 ${
                 isBlurred ? 'blur-md' : 'blur-0'
               }`}
             />
