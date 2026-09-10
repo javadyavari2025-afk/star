@@ -90,6 +90,9 @@ jobs:
           name: go-binaries
           path: build
 
+      - name: Restore executable permissions
+        run: chmod +x build/mwp.linux.*
+
       - uses: docker/setup-qemu-action@v3
 
       - uses: docker/setup-buildx-action@v3
