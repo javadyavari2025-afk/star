@@ -25,7 +25,7 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
   const status = isOnline ? 'Online' : 'Offline'
 
   return (
-    <Card className='sky-glass-card flex h-full flex-col gap-5 border-white/10'>
+    <Card className='sky-glass-card flex h-full min-w-0 flex-col gap-5 border-white/10'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0'>
         <CardTitle className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-base font-semibold text-transparent'>
           Statistics
@@ -64,18 +64,18 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
         ) : (
           <>
             <div className='space-y-3 text-sm'>
-              <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground'>Traffic Limit</span>
-                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text font-semibold text-transparent'>
+              <div className='flex items-center justify-between gap-2'>
+                <span className='text-muted-foreground shrink-0'>Traffic Limit</span>
+                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text min-w-0 text-right font-semibold break-words text-transparent'>
                   {stats?.traffic_limit
                     ? `${stats.traffic_limit} GB`
                     : 'Unlimited'}
                 </span>
               </div>
 
-              <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground'>Expiration</span>
-                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text font-semibold text-transparent'>
+              <div className='flex items-center justify-between gap-2'>
+                <span className='text-muted-foreground shrink-0'>Expiration</span>
+                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text min-w-0 text-right font-semibold break-words text-transparent'>
                   {stats?.expire_time
                     ? `${stats.expire_time} (${remainingDays(stats.expire_time)} Days)`
                     : 'Never'}
@@ -83,7 +83,7 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
               </div>
             </div>
 
-            <div className='grid grid-cols-2 gap-3'>
+            <div className='grid min-w-0 grid-cols-2 gap-3'>
               <div className='rounded-xl border border-white/10 bg-white/5 p-4'>
                 <div className='flex items-center gap-1.5 text-xs font-semibold tracking-wide text-green-400 uppercase'>
                   <ArrowDownIcon className='h-3.5 w-3.5' />
@@ -118,9 +118,9 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
               />
             )}
 
-            <div className='flex items-center justify-between border-t border-white/10 pt-4 text-sm'>
-              <span className='text-muted-foreground'>Total Usage</span>
-              <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text font-semibold text-transparent'>
+            <div className='flex items-center justify-between gap-2 border-t border-white/10 pt-4 text-sm'>
+              <span className='text-muted-foreground shrink-0'>Total Usage</span>
+              <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text min-w-0 text-right font-semibold break-words text-transparent'>
                 {stats?.total_usage ?? 0} GB{' '}
                 {stats?.traffic_limit ? `(${stats.usage_percent}%)` : ''}
               </span>
