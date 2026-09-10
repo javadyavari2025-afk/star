@@ -75,7 +75,7 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
                 <span className='text-muted-foreground'>Expiration</span>
                 <span className='font-semibold'>
                   {stats?.expire_time
-                    ? `${remainingDays(stats.expire_time)} Days Left`
+                    ? `${stats.expire_time} (${remainingDays(stats.expire_time)} Days)`
                     : 'Never'}
                 </span>
               </div>
