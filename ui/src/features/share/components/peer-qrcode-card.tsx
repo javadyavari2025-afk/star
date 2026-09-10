@@ -17,7 +17,7 @@ export default function PeerQRCodeCard({ isLoading, qrCode }: QRCodeCardProps) {
   }
 
   return (
-    <Card className='sky-glass-card flex h-full flex-col gap-5 border-white/10'>
+    <Card className='sky-glass-card flex h-full min-w-0 flex-col gap-5 border-white/10'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0'>
         <CardTitle className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-base font-semibold text-transparent'>
           QR Code
