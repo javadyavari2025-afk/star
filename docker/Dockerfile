@@ -23,6 +23,7 @@ VOLUME /var/www/mwp
 ARG TARGETOS
 ARG TARGETARCH
 COPY --chown=root:root ./build/mwp.$TARGETOS.$TARGETARCH /usr/local/sbin/mwp
+RUN chmod +x /usr/local/sbin/mwp
 
 # Install binary dependencies
 RUN set -eux; \
