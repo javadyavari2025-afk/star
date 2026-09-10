@@ -77,7 +77,7 @@ export default function PeerConfigCard({
           </div>
         ) : (
           <div
-            className='relative min-h-[12rem] flex-1 cursor-pointer overflow-auto rounded-xl border border-white/10 bg-black/30 px-4 py-3'
+            className='relative min-h-[9rem] flex-1 cursor-pointer overflow-auto rounded-xl border border-white/10 bg-black/30 px-4 py-3'
             onClick={toggleBlur}
             title={isBlurred ? 'Click to reveal' : 'Click to hide'}
           >
