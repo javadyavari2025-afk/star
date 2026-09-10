@@ -27,7 +27,9 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
   return (
     <Card className='sky-glass-card flex h-full flex-col gap-5 border-white/10'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0'>
-        <CardTitle className='text-base font-semibold'>Statistics</CardTitle>
+        <CardTitle className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-base font-semibold text-transparent'>
+          Statistics
+        </CardTitle>
         {!isLoading && (
           <span
             className={clsx(
@@ -64,7 +66,7 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
             <div className='space-y-3 text-sm'>
               <div className='flex items-center justify-between'>
                 <span className='text-muted-foreground'>Traffic Limit</span>
-                <span className='font-semibold'>
+                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text font-semibold text-transparent'>
                   {stats?.traffic_limit
                     ? `${stats.traffic_limit} GB`
                     : 'Unlimited'}
@@ -73,7 +75,7 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
 
               <div className='flex items-center justify-between'>
                 <span className='text-muted-foreground'>Expiration</span>
-                <span className='font-semibold'>
+                <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text font-semibold text-transparent'>
                   {stats?.expire_time
                     ? `${stats.expire_time} (${remainingDays(stats.expire_time)} Days)`
                     : 'Never'}
@@ -87,7 +89,7 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
                   <ArrowDownIcon className='h-3.5 w-3.5' />
                   Download
                 </div>
-                <div className='mt-1 text-2xl font-bold'>
+                <div className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text mt-1 text-2xl font-bold text-transparent'>
                   {stats?.download_usage ?? 0}{' '}
                   <span className='text-muted-foreground text-sm font-medium'>
                     GB
@@ -100,7 +102,7 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
                   <ArrowUpIcon className='h-3.5 w-3.5' />
                   Upload
                 </div>
-                <div className='mt-1 text-2xl font-bold'>
+                <div className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text mt-1 text-2xl font-bold text-transparent'>
                   {stats?.upload_usage ?? 0}{' '}
                   <span className='text-muted-foreground text-sm font-medium'>
                     GB
@@ -118,7 +120,7 @@ export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
 
             <div className='flex items-center justify-between border-t border-white/10 pt-4 text-sm'>
               <span className='text-muted-foreground'>Total Usage</span>
-              <span className='font-semibold'>
+              <span className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text font-semibold text-transparent'>
                 {stats?.total_usage ?? 0} GB{' '}
                 {stats?.traffic_limit ? `(${stats.usage_percent}%)` : ''}
               </span>
