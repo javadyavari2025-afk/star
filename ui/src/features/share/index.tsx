@@ -60,14 +60,15 @@ export default function PeerShare() {
           <h1 className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent'>
             {stats?.name ?? ''}
           </h1>
-          <p className='text-muted-foreground text-sm'>
+          <p className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-sm text-transparent'>
             Scan the QR Code with the WireGuard App to add this peer or
             download the config and import it manually.
           </p>
         </div>
 
         {telegramStatus?.enabled ? (
-          <div className='grid gap-6 lg:grid-cols-2'>
+          <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-4'>
+            {statsCard}
             <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
             {configCard}
             <PeerTelegramCard
@@ -76,15 +77,12 @@ export default function PeerShare() {
               botStatus={telegramStatus}
               linkStatus={telegramLink}
             />
-            {statsCard}
           </div>
         ) : (
-          <div className='grid items-start gap-6 lg:grid-cols-2'>
+          <div className='mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 xl:grid-cols-3'>
+            {statsCard}
             <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
-            <div className='space-y-6'>
-              {configCard}
-              {statsCard}
-            </div>
+            {configCard}
           </div>
         )}
       </div>
