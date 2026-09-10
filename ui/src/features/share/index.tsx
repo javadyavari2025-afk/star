@@ -54,10 +54,10 @@ export default function PeerShare() {
   }
 
   return (
-    <div className='sky-share-theme sky-share-bg text-foreground min-h-svh w-full'>
+    <div className='sky-share-theme sky-share-bg text-foreground min-h-svh w-full overflow-x-hidden'>
       <div className='max-w-8xl mx-auto space-y-10 px-6 py-14'>
         <div className='space-y-3 text-center'>
-          <h1 className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent'>
+          <h1 className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-4xl font-bold tracking-tight break-words text-transparent'>
             {stats?.name ?? ''}
           </h1>
           <p className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-sm text-transparent'>
