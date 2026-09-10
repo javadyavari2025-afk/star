@@ -59,7 +59,7 @@ export default function PeerConfigCard({
   return (
     <Card className='sky-glass-card flex h-full flex-col gap-5 border-white/10'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0'>
-        <CardTitle className='text-base font-semibold'>
+        <CardTitle className='from-primary bg-gradient-to-r to-fuchsia-400 bg-clip-text text-base font-semibold text-transparent'>
           Configuration
         </CardTitle>
         <span className='text-xs font-semibold text-amber-400'>
@@ -77,7 +77,7 @@ export default function PeerConfigCard({
           </div>
         ) : (
           <div
-            className='relative min-h-[9rem] flex-1 cursor-pointer overflow-auto rounded-xl border border-white/10 bg-black/30 px-4 py-3'
+            className='relative min-h-[12rem] flex-1 cursor-pointer overflow-auto rounded-xl border border-white/10 bg-black/30 px-4 py-3'
             onClick={toggleBlur}
             title={isBlurred ? 'Click to reveal' : 'Click to hide'}
           >
